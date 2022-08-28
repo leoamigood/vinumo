@@ -50,3 +50,8 @@ config :phoenix, :json_library, Jason
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"
+
+config :gramm,
+  host: "gramm.fly.dev/bot",
+  local_port: System.get_env("PORT", "4000") |> String.to_integer(),
+  max_bot_concurrency: System.get_env("BOT_MAX_CONCURRENTCY", "1000") |> String.to_integer()

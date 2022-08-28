@@ -34,3 +34,6 @@ npm-debug.log
 
 # IDE
 .idea/
+
+# secrets
+**/*.secret.exs

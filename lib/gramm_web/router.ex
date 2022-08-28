@@ -6,7 +6,7 @@ defmodule GrammWeb.Router do
     plug :fetch_session
     plug :fetch_live_flash
     plug :put_root_layout, {GrammWeb.LayoutView, :root}
-    plug :protect_from_forgery
+    #    plug :protect_from_forgery
     plug :put_secure_browser_headers
   end
 
@@ -18,6 +18,12 @@ defmodule GrammWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+  end
+
+  scope "/bot", GrammBot do
+    pipe_through :api
+
+    post "/:url_token", BotController, :create
   end
 
   # Other scopes may use custom stacks.

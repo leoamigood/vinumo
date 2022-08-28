@@ -7,6 +7,16 @@ defmodule Gramm.Application do
 
   @impl true
   def start(_type, _args) do
+    webhook_config = [
+      host: Application.fetch_env!(:gramm, :host),
+      local_port: Application.fetch_env!(:gramm, :local_port)
+    ]
+
+    bot_config = [
+      token: Application.fetch_env!(:gramm, :token_bot),
+      max_bot_concurrency: Application.fetch_env!(:gramm, :max_bot_concurrency)
+    ]
+
     children = [
       # Start the Ecto repository
       Gramm.Repo,
@@ -15,9 +25,10 @@ defmodule Gramm.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: Gramm.PubSub},
       # Start the Endpoint (http/https)
-      GrammWeb.Endpoint
+      GrammWeb.Endpoint,
       # Start a worker by calling: Gramm.Worker.start_link(arg)
       # {Gramm.Worker, arg}
+      {Telegram.Webhook, config: webhook_config, bots: [{Gramm.Bot.Counter, bot_config}]}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
