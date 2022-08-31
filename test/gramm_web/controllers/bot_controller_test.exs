@@ -5,7 +5,7 @@ defmodule GrammBot.BotControllerTest do
 
   test "POST /bot/:url_token", %{conn: conn} do
     token = Application.fetch_env!(:gramm, :token_bot)
-    payload = Jason.encode!(valid_payload())
+    payload = Jason.encode!(location_payload())
 
     conn
     |> put_api_content_type_header
@@ -14,7 +14,7 @@ defmodule GrammBot.BotControllerTest do
   end
 
   test "POST /bot/:invalid_url_token", %{conn: conn} do
-    payload = Jason.encode!(valid_payload())
+    payload = Jason.encode!(location_payload())
 
     conn
     |> put_api_content_type_header
@@ -22,7 +22,7 @@ defmodule GrammBot.BotControllerTest do
     |> response(404)
   end
 
-  defp valid_payload do
+  defp location_payload do
     %{
       "message" => %{
         "chat" => %{
@@ -31,8 +31,7 @@ defmodule GrammBot.BotControllerTest do
           "type" => "private",
           "username" => "NYCTrooper"
         },
-        "date" => 1_661_697_354,
-        "entities" => [%{"length" => 6, "offset" => 0, "type" => "bot_command"}],
+        "date" => 1_661_800_955,
         "from" => %{
           "first_name" => "Leo",
           "id" => 304_103_618,
@@ -40,10 +39,10 @@ defmodule GrammBot.BotControllerTest do
           "language_code" => "en",
           "username" => "NYCTrooper"
         },
-        "message_id" => 1,
-        "text" => "/start"
+        "location" => %{"latitude" => 54.117762, "longitude" => 12.05574},
+        "message_id" => 101
       },
-      "update_id" => 324_623_825
+      "update_id" => 324_623_871
     }
   end
 

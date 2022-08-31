@@ -12,6 +12,7 @@ defmodule GrammWeb.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+    plug Gramm.Plug.AtomParams
   end
 
   scope "/", GrammWeb do

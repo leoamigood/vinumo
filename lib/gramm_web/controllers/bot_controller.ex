@@ -1,12 +1,12 @@
 defmodule GrammBot.BotController do
   use GrammWeb, :controller
 
-  alias Gramm.Bot.Counter
+  alias Gramm.Bot.Fresha
 
-  def create(conn, update = %{"url_token" => token}) do
+  def create(conn, %{"url_token" => token} = update) do
     case Application.fetch_env!(:gramm, :token_bot) do
       ^token ->
-        Counter.dispatch_update(update, token)
+        Fresha.dispatch_update(update, token)
         send_resp(conn, 200, "")
 
       _ ->

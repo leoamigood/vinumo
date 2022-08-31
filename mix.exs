@@ -46,6 +46,7 @@ defmodule Gramm.MixProject do
       {:swoosh, "~> 1.3"},
       {:cowlib, "~>2.11", override: true},
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
+      {:dialyxir, "~> 1.0", only: [:dev], runtime: false},
       {:telegram, git: "https://github.com/visciang/telegram.git", tag: "0.20.3"},
       {:telemetry_metrics, "~> 0.6"},
       {:telemetry_poller, "~> 1.0"},

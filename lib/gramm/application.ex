@@ -28,7 +28,7 @@ defmodule Gramm.Application do
       GrammWeb.Endpoint,
       # Start a worker by calling: Gramm.Worker.start_link(arg)
       # {Gramm.Worker, arg}
-      {Telegram.Webhook, config: webhook_config, bots: [{Gramm.Bot.Counter, bot_config}]}
+      {Telegram.Webhook, config: webhook_config, bots: [{Gramm.Bot.Fresha, bot_config}]}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
