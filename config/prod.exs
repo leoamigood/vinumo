@@ -48,4 +48,6 @@ config :logger, level: :info
 #
 # Check `Plug.SSL` for all available options in `force_ssl`.
 
+config :telegram, api: Telegram.Api
 config :gramm, bot: Gramm.Bot.Fresha
+config :gramm, ostendo: Gramm.Ostendo.Impl

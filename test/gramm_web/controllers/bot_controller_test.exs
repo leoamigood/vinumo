@@ -10,7 +10,7 @@ defmodule GrammBot.BotControllerTest do
     token = Application.fetch_env!(:gramm, :token_bot)
     payload = Jason.encode!(location_request())
 
-#    Mock.allow_to_call_impl(Gramm.Bot, :dispatch_update, 2)
+    #    Mock.allow_to_call_impl(Gramm.Bot, :dispatch_update, 2)
 
     expect(Gramm.Bot.impl(), :dispatch_update, fn _update, token ->
       assert token == Application.fetch_env!(:gramm, :token_bot)

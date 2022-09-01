@@ -29,6 +29,9 @@ config :logger, level: :warn
 # Initialize plugs at runtime for faster test compilation
 config :phoenix, :plug_init_mode, :runtime
 
+config :telegram, api: Telegram.Api.Mock
+
 config :gramm, bot: Gramm.Bot.FreshaMock
+config :gramm, ostendo: Gramm.Ostendo.Mock
 
 import_config "test.secret.exs"

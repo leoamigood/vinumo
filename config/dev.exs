@@ -74,6 +74,8 @@ config :phoenix, :stacktrace_depth, 20
 # Initialize plugs at runtime for faster development compilation
 config :phoenix, :plug_init_mode, :runtime
 
+config :telegram, api: Telegram.Api
 config :gramm, bot: Gramm.Bot.Fresha
+config :gramm, ostendo: Gramm.Ostendo.Impl
 
 import_config "dev.secret.exs"

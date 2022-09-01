@@ -1,4 +1,6 @@
+Hammox.defmock(Telegram.Api.Mock, for: Telegram)
 Hammox.defmock(Gramm.Bot.FreshaMock, for: Gramm.Bot)
+Hammox.defmock(Gramm.Ostendo.Mock, for: Gramm.Ostendo)
 
 defmodule Mock do
   @moduledoc false

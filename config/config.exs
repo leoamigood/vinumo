@@ -51,6 +51,8 @@ config :phoenix, :json_library, Jason
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"
 
+config :tesla, adapter: Tesla.Adapter.Hackney
+
 config :gramm,
   host: "gramm.fly.dev/bot",
   local_port: System.get_env("PORT", "4000") |> String.to_integer(),
