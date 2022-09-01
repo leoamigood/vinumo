@@ -29,4 +29,6 @@ config :logger, level: :warn
 # Initialize plugs at runtime for faster test compilation
 config :phoenix, :plug_init_mode, :runtime
 
+config :gramm, bot: Gramm.Bot.FreshaMock
+
 import_config "test.secret.exs"
