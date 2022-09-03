@@ -8,6 +8,6 @@ defmodule Gramm.Ostendo.Client do
 
   @spec shows :: {:ok, term()} | {:error, term()}
   def shows do
-    get("/api/v1/shows")
+    get("/api/v1/shows", query: [auth_token: Application.fetch_env!(:gramm, :ostendo_api_key)])
   end
 end

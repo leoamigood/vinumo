@@ -82,5 +82,6 @@ if config_env() == :prod do
   # See https://hexdocs.pm/swoosh/Swoosh.html#module-installation for details.
 
   config :gramm,
-    token_bot: System.fetch_env!("BOT_TOKEN")
+    token_bot: System.fetch_env!("BOT_TOKEN"),
+    ostendo_api_key: System.fetch_env!("OSTENDO_API_KEY")
 end
