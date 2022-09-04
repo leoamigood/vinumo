@@ -8,12 +8,14 @@ defmodule GrammBot.BotControllerTest do
 
   test "POST /bot/:url_token", %{conn: conn} do
     token = Application.fetch_env!(:gramm, :token_bot)
-    payload = Jason.encode!(location_request())
+    payload = Jason.encode!(location_payload())
 
     #    Mock.allow_to_call_impl(Gramm.Bot, :dispatch_update, 2)
+    #    Mock.allow_to_call_impl(Telegram, :request, 3)
 
-    expect(Gramm.Bot.impl(), :dispatch_update, fn _update, token ->
+    expect(Gramm.Bot.impl(), :dispatch_update, fn update, token ->
       assert token == Application.fetch_env!(:gramm, :token_bot)
+      assert %{message: %{message_id: 101}} = update
 
       {:ok, location_response()}
     end)
@@ -25,7 +27,7 @@ defmodule GrammBot.BotControllerTest do
   end
 
   test "POST /bot/:invalid_url_token", %{conn: conn} do
-    payload = Jason.encode!(location_request())
+    payload = Jason.encode!(location_payload())
 
     conn
     |> put_api_content_type_header
@@ -33,7 +35,7 @@ defmodule GrammBot.BotControllerTest do
     |> response(404)
   end
 
-  defp location_request do
+  defp location_payload do
     %{
       "message" => %{
         "chat" => %{

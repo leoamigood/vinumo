@@ -50,6 +50,7 @@ defmodule Gramm.MixProject do
       {:hackney, "~> 1.13"},
       {:hammox, "~> 0.7", only: [:dev, :test]},
       {:peppermint, "~> 0.3.0"},
+      {:poison, "~> 5.0"},
       {:castore, "~> 0.1.0"},
       {:telegram, git: "https://github.com/visciang/telegram.git", tag: "0.20.3"},
       {:telemetry_metrics, "~> 0.6"},

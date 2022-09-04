@@ -4,7 +4,7 @@ defmodule Gramm.Ostendo.Client do
   use Tesla
 
   plug Tesla.Middleware.BaseUrl, "https://aktiverum.herokuapp.com"
-  plug Tesla.Middleware.JSON
+  plug Tesla.Middleware.JSON, engine: Poison, engine_opts: [keys: :atoms]
 
   @spec shows :: {:ok, term()} | {:error, term()}
   def shows do
