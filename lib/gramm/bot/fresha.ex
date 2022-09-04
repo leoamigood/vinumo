@@ -10,14 +10,12 @@ defmodule Gramm.Bot.Fresha do
   @impl Telegram.Bot
   @spec handle_update(map :: map, token :: String.t()) :: {:ok, term()} | {:error, term()}
   def handle_update(%{message: %{text: @command_shows, chat: %{id: chat_id}}}, token) do
-    case Ostendo.impl().shows do
-      {:ok, %{status: 200, body: shows}} ->
-        reply("Available shows:")
-        |> with_inline_keyboard(Enum.map(shows, &callback_data(&1)))
-        #        |> with_reply_keyboard(Enum.map(shows, &[%{text: &1.name}]))
-        #        |> reply_keyboard_options(%{one_time_keyboard: true})
-        |> send_message(chat_id, token)
-
+    with {:ok, %{status: 200, body: body}} <- Ostendo.impl().shows,
+         shows <- AtomUtils.symbolize_keys(body) do
+      reply("Available shows:")
+      |> with_inline_keyboard(display_shows(shows))
+      |> send_message(chat_id, token)
+    else
       response ->
         reply("Shows are currently unavailable!") |> send_message(chat_id, token)
         Logger.info(response)
@@ -63,8 +61,8 @@ defmodule Gramm.Bot.Fresha do
     Map.merge(message, %{reply_markup: %{inline_keyboard: keyboard}})
   end
 
-  defp callback_data(show) do
-    [%{text: show.name, callback_data: show.identifier}]
+  defp display_shows(shows) do
+    Enum.map(shows, &[%{text: &1.name, callback_data: &1.identifier}])
   end
 
   defp reply_keyboard_options(message, options) do

@@ -13,14 +13,9 @@ defmodule Gramm.Bot.FreshaTest do
 
   describe "handle_update/1" do
     test "handle shows display", %{token: token} do
-      shows = [
-        %{name: "High maintenance", identifier: "953d9b64-1d9a-4593-ba63-65ae709d5bce"},
-        %{name: "Two and a half men", identifier: "428b87af-376c-4ccd-808d-9672094de0e2"}
-      ]
-
       #      Mock.allow_to_call_impl(Telegram, :request, 3)
 
-      expect(Ostendo.impl(), :shows, fn -> {:ok, %{status: 200, body: shows}} end)
+      expect(Ostendo.impl(), :shows, fn -> {:ok, %{status: 200, body: shows_response()}} end)
       expect(Telegram.impl(), :request, fn _token, _command, _payload -> {:ok, %{}} end)
 
       Fresha.handle_update(shows_request(), token)
@@ -75,5 +70,26 @@ defmodule Gramm.Bot.FreshaTest do
       },
       :update_id => 324_623_895
     }
+  end
+
+  def shows_response() do
+    shows = [
+      %{
+        name: "High maintenance",
+        identifier: "953d9b64-1d9a-4593-ba63-65ae709d5bce",
+        episodes: []
+      },
+      %{
+        name: "Two and a half men",
+        identifier: "428b87af-376c-4ccd-808d-9672094de0e2",
+        episodes: [
+          %{
+            name: "Pilot",
+            identifier: "e8bb1334-30b1-4431-9997-822804bcbc3a",
+            video: "https://s3hosting.com/path/to/video"
+          }
+        ]
+      }
+    ]
   end
 end
