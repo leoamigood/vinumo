@@ -19,6 +19,13 @@ defmodule Gramm.Bot.FreshaTest do
       Fresha.handle_update(shows_request(), token)
     end
 
+    test "show selection callback", %{token: token} do
+      expect(Ostendo.impl(), :show, fn _ -> {:ok, %{status: 200, body: episodes_response()}} end)
+      expect(Telegram.impl(), :request, fn _token, _command, _payload -> {:ok, %{}} end)
+
+      Fresha.handle_update(show_callback(), token)
+    end
+
     test "requests user location", %{token: token} do
       expect(Telegram.impl(), :request, fn _token, _command, _payload -> {:ok, %{}} end)
 
@@ -96,6 +103,44 @@ defmodule Gramm.Bot.FreshaTest do
     }
   end
 
+  defp show_callback do
+    %{
+      callback_query: %{
+        chat_instance: "-3130868472906067352",
+        data: "show:ac2a7f52-cf83-44aa-95e7-6084d5da693d",
+        from: %{
+          first_name: "James",
+          id: 304_103_618,
+          is_bot: false,
+          language_code: "en",
+          username: "AgentBond"
+        },
+        id: "1306115095822948549",
+        message: %{
+          chat: %{first_name: "James", id: 304_103_618, type: "private", username: "AgentBond"},
+          date: 1_662_313_098,
+          from: %{first_name: "vinumo", id: 5_755_304_518, is_bot: true, username: "vinumobot"},
+          message_id: 271,
+          reply_markup: %{
+            inline_keyboard: [
+              [
+                %{
+                  callback_data: "show:ac2a7f52-cf83-44aa-95e7-6084d5da693d",
+                  text: "High maintenance"
+                }
+              ],
+              [
+                %{callback_data: "show:ac2a7f52-cf83-44aa-95e7-6084d5da693d", text: "Lost"}
+              ]
+            ]
+          },
+          text: "Available shows:"
+        }
+      },
+      update_id: 324_623_952
+    }
+  end
+
   def shows_response do
     [
       %{
@@ -115,5 +160,20 @@ defmodule Gramm.Bot.FreshaTest do
         ]
       }
     ]
+  end
+
+  def episodes_response do
+    %{
+      identifier: "ac2a7f52-cf83-44aa-95e7-6084d5da693d",
+      name: "Two and a half men",
+      episodes: [
+        %{
+          identifier: "e0d3ea9f-bfbc-44a2-9029-850567c9c157",
+          name: "Pilot",
+          season: "S1",
+          video_url: "https://ostendo.fra1.digitaloceanspaces.com/i3eovo7bs0irce2itn99l5pg7ymk"
+        }
+      ]
+    }
   end
 end

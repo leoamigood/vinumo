@@ -12,7 +12,11 @@ defmodule Gramm.Bot.Fresha do
   @impl Telegram.Bot
   @spec handle_update(map :: map, token :: String.t()) :: {:ok, term()} | {:error, term()}
   def handle_update(update = %{message: %{text: @command_shows}}, token) do
-    Command.Shows.send(update, token)
+    Command.Curator.shows(update, token)
+  end
+
+  def handle_update(update = %{callback_query: %{data: "show:" <> _uuid}}, token) do
+    Command.Curator.episodes(update, token)
   end
 
   def handle_update(update = %{message: %{text: @command_location}}, token) do

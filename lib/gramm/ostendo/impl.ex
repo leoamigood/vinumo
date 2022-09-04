@@ -3,4 +3,5 @@ defmodule Gramm.Ostendo.Impl do
   @behaviour Gramm.Ostendo
 
   defdelegate shows, to: Gramm.Ostendo.Client
+  defdelegate show(uuid), to: Gramm.Ostendo.Client
 end
