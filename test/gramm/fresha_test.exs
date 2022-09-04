@@ -13,7 +13,14 @@ defmodule Gramm.Bot.FreshaTest do
 
   describe "handle_update/1" do
     test "handle shows display", %{token: token} do
-      expect(Ostendo.impl(), :shows, fn -> {:ok, %{status: 200, body: []}} end)
+      shows = [
+        %{name: "High maintenance", identifier: "953d9b64-1d9a-4593-ba63-65ae709d5bce"},
+        %{name: "Two and a half men", identifier: "428b87af-376c-4ccd-808d-9672094de0e2"}
+      ]
+
+      #      Mock.allow_to_call_impl(Telegram, :request, 3)
+
+      expect(Ostendo.impl(), :shows, fn -> {:ok, %{status: 200, body: shows}} end)
       expect(Telegram.impl(), :request, fn _token, _command, _payload -> {:ok, %{}} end)
 
       Fresha.handle_update(shows_request(), token)

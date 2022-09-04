@@ -11,12 +11,15 @@ defmodule Gramm.Bot.Fresha do
   @spec handle_update(map :: map, token :: String.t()) :: {:ok, term()} | {:error, term()}
   def handle_update(%{message: %{text: @command_shows, chat: %{id: chat_id}}}, token) do
     case Ostendo.impl().shows do
-      {:ok, %{status: 200, body: payload}} ->
-        "Available shows: #{Enum.map_join(payload, ", ", &Map.get(&1, "name"))}"
+      {:ok, %{status: 200, body: shows}} ->
+        reply("Available shows:")
+        |> with_inline_keyboard(Enum.map(shows, &callback_data(&1)))
+        #        |> with_reply_keyboard(Enum.map(shows, &[%{text: &1.name}]))
+        #        |> reply_keyboard_options(%{one_time_keyboard: true})
         |> send_message(chat_id, token)
 
       response ->
-        "Shows are currently unavailable!" |> send_message(chat_id, token)
+        reply("Shows are currently unavailable!") |> send_message(chat_id, token)
         Logger.info(response)
     end
   end
@@ -48,7 +51,39 @@ defmodule Gramm.Bot.Fresha do
     :ok
   end
 
-  defp send_message(text, chat_id, token) do
-    Telegram.impl().request(token, "sendMessage", chat_id: chat_id, text: text)
+  defp reply(text, parse_mode \\ "Markdown") do
+    %{text: text, parse_mode: parse_mode}
+  end
+
+  defp with_reply_keyboard(message, keyboard) do
+    Map.merge(message, %{reply_markup: %{keyboard: keyboard}})
+  end
+
+  defp with_inline_keyboard(message, keyboard) do
+    Map.merge(message, %{reply_markup: %{inline_keyboard: keyboard}})
+  end
+
+  defp callback_data(show) do
+    [%{text: show.name, callback_data: show.identifier}]
+  end
+
+  defp reply_keyboard_options(message, options) do
+    %{message | reply_markup: Map.merge(message.reply_markup, options)}
+  end
+
+  defp to_keyword_list(map) do
+    Enum.map(map, fn {key, value} -> {key, value} end)
+  end
+
+  defp send_message(message = %{reply_markup: _reply_markup}, chat_id, token) do
+    send_message(message |> to_keyword_list, chat_id, token)
+  end
+
+  defp send_message(message = %{text: _text}, chat_id, token) do
+    send_message(message |> to_keyword_list, chat_id, token)
+  end
+
+  defp send_message(message, chat_id, token) do
+    Telegram.impl().request(token, "sendMessage", [chat_id: chat_id] ++ message)
   end
 end

@@ -9,7 +9,7 @@ defmodule Gramm.Plug.AtomParams do
   end
 
   @impl Plug
-  def call(%{params: params} = conn, opts) do
+  def call(conn = %{params: params}, opts) do
     %{conn | params: symbolize_merge(params, opts)}
   end
 
@@ -27,7 +27,7 @@ defmodule Gramm.Plug.AtomParams do
     end
   end
 
-  defp symbolize_keys(%{__struct__: _module} = struct) do
+  defp symbolize_keys(struct = %{__struct__: _module}) do
     struct
   end
 
