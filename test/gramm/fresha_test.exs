@@ -14,14 +14,14 @@ defmodule Gramm.Bot.FreshaTest do
   describe "handle_update/2" do
     test "retrieves ostendo shows, sends to user", %{token: token} do
       expect(Ostendo.impl(), :shows, fn -> {:ok, %{status: 200, body: shows_response()}} end)
-      expect(Telegram.impl(), :request, fn _token, _command, _payload -> {:ok, %{}} end)
+      expect(Telegram.impl(), :request, fn _token, _command, _payload -> {:ok, ""} end)
 
       Fresha.handle_update(shows_request(), token)
     end
 
     test "show selection callback", %{token: token} do
       expect(Ostendo.impl(), :show, fn _ -> {:ok, %{status: 200, body: show_response()}} end)
-      expect(Telegram.impl(), :request, fn _token, _command, _payload -> {:ok, %{}} end)
+      expect(Telegram.impl(), :request, fn _token, _command, _payload -> {:ok, ""} end)
 
       Fresha.handle_update(show_callback(), token)
     end
@@ -38,7 +38,7 @@ defmodule Gramm.Bot.FreshaTest do
                  {:video, "https://s3hosting.com/path/to/video"}
                ] = payload
 
-        {:ok, %{}}
+        {:ok, ""}
       end)
 
       Fresha.handle_update(episode_callback(), token)
