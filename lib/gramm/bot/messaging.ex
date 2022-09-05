@@ -34,6 +34,18 @@ defmodule Gramm.Bot.Messaging do
       def send_message(message, chat_id, token) do
         Telegram.impl().request(token, "sendMessage", [chat_id: chat_id] ++ message)
       end
+
+      def video(caption, video_url) do
+        %{caption: caption, video: video_url}
+      end
+
+      def send_video(message = %{video: video}, chat_id, token) do
+        Telegram.impl().request(
+          token,
+          "sendVideo",
+          [chat_id: chat_id] ++ (message |> to_keyword_list)
+        )
+      end
     end
   end
 end

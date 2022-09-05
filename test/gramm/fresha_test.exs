@@ -20,10 +20,28 @@ defmodule Gramm.Bot.FreshaTest do
     end
 
     test "show selection callback", %{token: token} do
-      expect(Ostendo.impl(), :show, fn _ -> {:ok, %{status: 200, body: episodes_response()}} end)
+      expect(Ostendo.impl(), :show, fn _ -> {:ok, %{status: 200, body: show_response()}} end)
       expect(Telegram.impl(), :request, fn _token, _command, _payload -> {:ok, %{}} end)
 
       Fresha.handle_update(show_callback(), token)
+    end
+
+    test "episode selection callback", %{token: token} do
+      expect(Ostendo.impl(), :episode, fn _ -> {:ok, %{status: 200, body: episode_response()}} end)
+
+      expect(Telegram.impl(), :request, fn _token, command, payload ->
+        assert "sendVideo" = command
+
+        assert [
+                 {:chat_id, 304_103_618},
+                 {:caption, "Big Flappy Bastards"},
+                 {:video, "https://s3hosting.com/path/to/video"}
+               ] = payload
+
+        {:ok, %{}}
+      end)
+
+      Fresha.handle_update(episode_callback(), token)
     end
 
     test "requests user location", %{token: token} do
@@ -141,6 +159,41 @@ defmodule Gramm.Bot.FreshaTest do
     }
   end
 
+  defp episode_callback do
+    %{
+      callback_query: %{
+        chat_instance: "-3130868472906067352",
+        data: "episode:a8d518d3-a3f7-416d-aa3f-1663e9972458",
+        from: %{
+          first_name: "James",
+          id: 304_103_618,
+          is_bot: false,
+          language_code: "en",
+          username: "AgentBond"
+        },
+        id: "1306115095822948549",
+        message: %{
+          chat: %{first_name: "James", id: 304_103_618, type: "private", username: "AgentBond"},
+          date: 1_662_313_098,
+          from: %{first_name: "vinumo", id: 5_755_304_518, is_bot: true, username: "vinumobot"},
+          message_id: 271,
+          reply_markup: %{
+            inline_keyboard: [
+              [
+                %{
+                  callback_data: "episode:a8d518d3-a3f7-416d-aa3f-1663e9972458",
+                  text: "Big Flappy Bastards"
+                }
+              ]
+            ]
+          },
+          text: "Available episodes:"
+        }
+      },
+      update_id: 324_623_952
+    }
+  end
+
   def shows_response do
     [
       %{
@@ -162,7 +215,7 @@ defmodule Gramm.Bot.FreshaTest do
     ]
   end
 
-  def episodes_response do
+  def show_response do
     %{
       identifier: "ac2a7f52-cf83-44aa-95e7-6084d5da693d",
       name: "Two and a half men",
@@ -171,9 +224,18 @@ defmodule Gramm.Bot.FreshaTest do
           identifier: "e0d3ea9f-bfbc-44a2-9029-850567c9c157",
           name: "Pilot",
           season: "S1",
-          video_url: "https://ostendo.fra1.digitaloceanspaces.com/i3eovo7bs0irce2itn99l5pg7ymk"
+          video_url: "https://s3hosting.com/path/to/video"
         }
       ]
+    }
+  end
+
+  def episode_response do
+    %{
+      identifier: "a8d518d3-a3f7-416d-aa3f-1663e9972458",
+      name: "Big Flappy Bastards",
+      season: "S1",
+      video_url: "https://s3hosting.com/path/to/video"
     }
   end
 end

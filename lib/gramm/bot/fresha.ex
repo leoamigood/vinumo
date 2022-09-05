@@ -15,8 +15,12 @@ defmodule Gramm.Bot.Fresha do
     Command.Curator.shows(update, token)
   end
 
-  def handle_update(update = %{callback_query: %{data: "show:" <> _uuid}}, token) do
-    Command.Curator.episodes(update, token)
+  def handle_update(update = %{callback_query: %{data: "show:" <> _identifier}}, token) do
+    Command.Curator.show(update, token)
+  end
+
+  def handle_update(update = %{callback_query: %{data: "episode:" <> _identifier}}, token) do
+    Command.Curator.episode(update, token)
   end
 
   def handle_update(update = %{message: %{text: @command_location}}, token) do

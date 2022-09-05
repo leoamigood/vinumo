@@ -21,4 +21,14 @@ defmodule Gramm.Ostendo.Client do
       query: [auth_token: Application.fetch_env!(:gramm, :ostendo_api_key)]
     )
   end
+
+  @spec episode(Gramm.Ostendo.uuid()) :: {:ok, term()} | {:error, term()}
+  def episode(identifier) do
+    params = [identifier: identifier]
+
+    get("/api/v1/episodes/:identifier",
+      opts: [path_params: params],
+      query: [auth_token: Application.fetch_env!(:gramm, :ostendo_api_key)]
+    )
+  end
 end

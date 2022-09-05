@@ -20,15 +20,30 @@ defmodule Gramm.Bot.Command.Curator do
     end
   end
 
-  def episodes(%{callback_query: %{data: "show:" <> uuid, from: %{id: chat_id}}}, token) do
-    case Ostendo.impl().show(uuid) do
+  def show(%{callback_query: %{data: "show:" <> identifier, from: %{id: chat_id}}}, token) do
+    case Ostendo.impl().show(identifier) do
       {:ok, %{status: 200, body: body}} ->
-        reply("Available episodes:")
+        reply("Show episodes:")
         |> with_inline_keyboard(with_buttons("episode", body[:episodes]))
         |> send_message(chat_id, token)
 
       {:ok, %{status: 404}} ->
-        reply("No episodes yet!") |> send_message(chat_id, token)
+        reply("Not found!") |> send_message(chat_id, token)
+
+      response ->
+        reply("Service currently unavailable!") |> send_message(chat_id, token)
+        Logger.info(response)
+    end
+  end
+
+  def episode(%{callback_query: %{data: "episode:" <> identifier, from: %{id: chat_id}}}, token) do
+    case Ostendo.impl().episode(identifier) do
+      {:ok, %{status: 200, body: body}} ->
+        video(body[:name], body[:video_url])
+        |> send_video(chat_id, token)
+
+      {:ok, %{status: 404}} ->
+        reply("Not found!") |> send_message(chat_id, token)
 
       response ->
         reply("Service currently unavailable!") |> send_message(chat_id, token)

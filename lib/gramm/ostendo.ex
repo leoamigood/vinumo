@@ -8,4 +8,5 @@ defmodule Gramm.Ostendo do
 
   @callback shows :: {:ok, term()} | {:error, term()}
   @callback show(uuid) :: {:ok, term()} | {:error, term()}
+  @callback episode(uuid) :: {:ok, term()} | {:error, term()}
 end
