@@ -3,7 +3,7 @@ defmodule Gramm.Ostendo.Client do
 
   use Tesla
 
-  plug Tesla.Middleware.BaseUrl, "https://aktiverum.herokuapp.com"
+  plug Tesla.Middleware.BaseUrl, "https://aktiverum-b8cbw.ondigitalocean.app"
   plug Tesla.Middleware.JSON, engine: Poison, engine_opts: [keys: :atoms]
   plug Tesla.Middleware.PathParams
 
